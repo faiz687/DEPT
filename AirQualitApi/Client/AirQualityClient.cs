@@ -23,9 +23,16 @@ namespace AirQualityApi.Client
             Client.BaseAddress = new Uri(OpenAqUrl);
         }
 
-        public async Task<Root<Cities>> GetAllCities()
+        public async Task<Root<Cities>> GetAllCities(string [] countries)
         {
-            var result = await Client.GetAsync("cities");
+            var query = "";
+
+            foreach (var country in countries)
+            {
+                query += $"country={country}&";
+            } 
+
+            var result = await Client.GetAsync($"cities?{query}");
 
             var json = await result.Content.ReadAsStringAsync();
 

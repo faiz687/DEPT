@@ -10,29 +10,54 @@
 
     <div class="row gx-5 mt-4">
 
+        <div class="col parameters"> 
+            
+            <form method="post" asp-action="GetMeasurements" asp-controller="AirQuality">
 
-        <div class="col parameters">
-            <div class="p-3 border bg-light">
-
-    
-                    <select class="form-control AllCountriesList"
-                      asp-items="Model.AllCountries" id="id_label_multiple" multiple="multiple"></select>
-       
+                <div class="p-3 border bg-light">
+                    <select class="form-control" asp-items="Model.AllCountries" asp-for="SelectedCountriesTrying" id="allCountriesList" multiple="multiple">
+                    </select>
+                </div>
 
 
-            </div>
+
+                @*public string FirstName { get; set; }
+
+                public string LastName { get; set; }
+
+                public string SelectedCountries { get; set; }
+
+                public List<string>
+                    SelectedCountriesTrying { get; set; }*@
+
+
+
+                    <div class="p-3 border bg-light">
+                        <select class="form-control" id="allCitiesList" multiple="multiple"></select>
+                    </div>
+
+
+
+                    <label for="fname">First name:</label>
+                    <input type="text" asp-for="FirstName"><br><br>
+                    <label for="lname">Last name:</label>
+                    <input type="text" asp-for="LastName"><br><br>
+                    <input type="submit" value="Submit">
+
+
+
+
+            </form>
+
+
         </div>
 
 
 
         <div class="col results">
 
-
-            <div class="p-3 border bg-light">Results</div>
-
-
-
-
         </div>
+
     </div>
+
 </div>

@@ -4,29 +4,42 @@
 // Write your JavaScript code.
 $(document).ready(function () {
 
-    $('.AllCountriesList').select2({
+    $('#allCountriesList').select2({
         placeholder: "Select Countries here",
         allowClear: true
     });
 
-    $('.AllCountriesList').on('change.select2', function (e) {
+    $('#allCitiesList').select2();
 
-        var selectedCountries = $('.AllCountriesList').select2('data');
+    $('#allCountriesList').on('change.select2', function (e) {
+
+        var selectedCountries = $('#allCountriesList').select2('data');
 
         var selectedCountriesIds = selectedCountries.map(country => country.id)
 
         $.ajax({
             url: '/AirQuality/GetAllCities',
-            data: { countriesSelected: JSON.stringify(selectedCountriesIds) },
+            data: { selectedCountries: selectedCountriesIds.toString() },
             type: "GET",
             cache: false,
-            success: function (result) {
-               
-                
+            success: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                console.log(data)
+
+
+                $('#allCitiesList').select2({ data });
+
+
+
             }
         });
 
+
+
     });
+
+
+
 
 
 });
