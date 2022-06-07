@@ -23,16 +23,9 @@ namespace AirQualityApi.Client
             Client.BaseAddress = new Uri(OpenAqUrl);
         }
 
-        public async Task<Root<Cities>> GetAllCities(string [] countries)
+        public async Task<Root<Cities>> GetAllCities(string query)
         {
-            var query = "";
-
-            foreach (var country in countries)
-            {
-                query += $"country={country}&";
-            } 
-
-            var result = await Client.GetAsync($"cities?{query}");
+            var result = await Client.GetAsync($"cities{query}");
 
             var json = await result.Content.ReadAsStringAsync();
 
@@ -51,5 +44,17 @@ namespace AirQualityApi.Client
 
             return response;
         }
+
+        public async Task<Root<MeasurementResult>> GetMeasurements(string Query)
+        {
+            var result = await Client.GetAsync($"latest{Query}");
+
+            var json = await result.Content.ReadAsStringAsync();
+
+            var response = JsonConvert.DeserializeObject<Root<MeasurementResult>>(json);
+
+            return response;
+        }
+
     }
 }

@@ -7,6 +7,9 @@ namespace AirQualityApi.Interfaces
     {
         Task<Root<Countries>> GetAllCountries();
 
-        Task<Root<Cities>> GetAllCities(string[] countries);
+        Task<Root<Cities>> GetAllCities(string Query);
+
+        Task<Root<MeasurementResult>> GetMeasurements(string Query);
+
     }
 }

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";   
+    ViewData["Title"] = "Home Page";
 }
 
 @model AirQualityIndexViewModel
@@ -10,52 +10,43 @@
 
     <div class="row gx-5 mt-4">
 
-        <div class="col parameters"> 
-            
+        <div class="col parameters">
+
             <form method="post" asp-action="GetMeasurements" asp-controller="AirQuality">
 
                 <div class="p-3 border bg-light">
-                    <select class="form-control" asp-items="Model.AllCountries" asp-for="SelectedCountriesTrying" id="allCountriesList" multiple="multiple">
-                    </select>
+                    <select class="form-control" asp-items="Model.AllCountries" asp-for="SelectedCountries" multiple="multiple"></select>
                 </div>
 
+                <div class="p-3 border bg-light">
+                    <select class="form-control" asp-items="Model.AllCities" asp-for="SelectedCities" multiple="multiple"></select>
+                </div>
 
-
-                @*public string FirstName { get; set; }
-
-                public string LastName { get; set; }
-
-                public string SelectedCountries { get; set; }
-
-                public List<string>
-                    SelectedCountriesTrying { get; set; }*@
-
-
-
-                    <div class="p-3 border bg-light">
-                        <select class="form-control" id="allCitiesList" multiple="multiple"></select>
-                    </div>
-
-
-
-                    <label for="fname">First name:</label>
-                    <input type="text" asp-for="FirstName"><br><br>
-                    <label for="lname">Last name:</label>
-                    <input type="text" asp-for="LastName"><br><br>
-                    <input type="submit" value="Submit">
-
-
-
+                <button type="submit" class="btn btn-success mt-4">Get Results</button>
 
             </form>
-
 
         </div>
 
 
-
         <div class="col results">
+            @if (Model.Measurements != null &&  Model.Measurements.Any())
+            {
+                <div class="p-3 border bg-light">
+                    @foreach (var measurement in Model.Measurements)
+                    {
+                        <div class="card" style="width: 18rem;">
+                            <img class="card-img-top" src="..." alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    }
+                </div>
 
+            }
         </div>
 
     </div>

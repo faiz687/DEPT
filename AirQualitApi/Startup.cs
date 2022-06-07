@@ -29,7 +29,7 @@ namespace AirQualitApi
             services.AddControllersWithViews()
                     .AddRazorRuntimeCompilation();
 
-
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<IAirQualityClient, AirQualityClient>();
 
