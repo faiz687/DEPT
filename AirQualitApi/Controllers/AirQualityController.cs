@@ -59,18 +59,18 @@ namespace AirQualityApi.Controllers
             return Json(result);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetMeasurements(AirQualityIndexViewModel viewModel)
         {
             var airQualitySearchRequest = _mapper.Map<AirQualitySearchRequest>(viewModel);
- 
+
             var query = AirQualityHelper.GenerateSearchRequest(airQualitySearchRequest);
 
             var results = await _airQualityServiceClient.GetMeasurements(query);
 
-            var resultFiltered = results.Results.Where(a => a.city != null && a.city != "N/A");
+            var resultsFiltered = results.Results.Where(a => a.city != null && a.city != "N/A").ToList();
 
-            viewModel.Measurements = resultFiltered.ToList();
+            viewModel.Measurements = resultsFiltered;
 
             var result = await GetAllCountries();
             viewModel.AllCountries = result.Select(country => new SelectListItem
@@ -80,7 +80,8 @@ namespace AirQualityApi.Controllers
             }).ToList();
 
             var resultCities = await GetAllCities(viewModel.SelectedCountries);
-            viewModel.AllCities = resultCities.Select(city => {
+            viewModel.AllCities = resultCities.Select(city =>
+            {
 
                 return new SelectListItem
                 {
@@ -88,8 +89,7 @@ namespace AirQualityApi.Controllers
                     Selected = city.City == viewModel.SelectedCities[0] ? true : false
                 };
             }).ToList();
-
-
+            
             return View("Index",viewModel);
         }
 

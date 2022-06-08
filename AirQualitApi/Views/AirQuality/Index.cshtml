@@ -12,7 +12,7 @@
 
         <div class="col parameters">
 
-            <form method="post" asp-action="GetMeasurements" asp-controller="AirQuality">
+            <form method="get" asp-action="GetMeasurements" asp-controller="AirQuality">
 
                 <div class="p-3 border bg-light">
                     <select class="form-control" asp-items="Model.AllCountries" asp-for="SelectedCountries" multiple="multiple"></select>
@@ -23,29 +23,38 @@
                 </div>
 
                 <button type="submit" class="btn btn-success mt-4">Get Results</button>
-
             </form>
 
         </div>
 
-
         <div class="col results">
-            @if (Model.Measurements != null &&  Model.Measurements.Any())
+            @if (Model.Measurements != null && Model.Measurements.Any())
             {
+
                 <div class="p-3 border bg-light">
                     @foreach (var measurement in Model.Measurements)
                     {
-                        <div class="card" style="width: 18rem;">
-                            <img class="card-img-top" src="..." alt="Card image cap">
+
+                        <div class="card mb-3">
                             <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <h5 class="card-title">@measurement.location</h5>
+                                @if (measurement.measurements != null && measurement.measurements.Any())
+                                {
+                                    // display more data ??
+                                    <div class="measurement-body">
+                                        @foreach (var _measurement in measurement.measurements)
+                                        {
+                                            <div class="measurement-box">
+                                                <label class="card-text">@($"{_measurement.parameter}")</label>
+                                                <span class="measurement-value">@($"{_measurement.value}")</span>
+                                            </div>
+                                        }
+                                    </div>
+                                }
                             </div>
                         </div>
                     }
                 </div>
-
             }
         </div>
 
