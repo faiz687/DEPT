@@ -46,49 +46,6 @@ namespace AirQualityApi.ServiceClient
             }
         }
 
-        //public async Task<AirQualityResult<Cities>> GetAllCities(List<string> Countries = null)
-        //{
-        //    var result = new AirQualityResult<Cities> { Success = false };
-
-        //    try
-        //    {
-        //        var query = AirQualityHelper.GenerateSearchRequest(new AirQualitySearchRequest { Country = Countries });
-
-        //        var response = await _client.Get($"cities?{query}");
-
-        //        if (response.Success)
-        //        {
-        //            result = JsonConvert.DeserializeObject<AirQualityResult<cities>>(response.Response);
-        //            result.Success = true;
-        //        }
-
-        //        result.Message = response.Response;
-        //        return result;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        result.Message = $"Error Occured while making call to API with message {ex.Message}";
-        //        return result;
-        //    }
-
-
-
-
-
-
-
-
-
-
-
-        //    var query = AirQualityHelper.GenerateSearchRequest(new AirQualitySearchRequest { Country = Countries });
-
-        //    var allCities = await _airQualityServiceClient.Get(query);
-
-        //    return allCities.Results.Where(c => c.City != "N/A").ToList();
-        //}
-
-
         protected string AdaptiveUri
         {
             get
