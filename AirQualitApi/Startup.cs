@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using AirQualityApi.ServiceClient;
+using AirQualityApi.Endpoints;
 
 namespace AirQualitApi
 {
@@ -31,9 +33,11 @@ namespace AirQualitApi
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddScoped<IAirQualityClient, AirQualityClient>();
-
-        }
+            services.AddScoped<IClient, Client>();
+            services.AddScoped<ICountriesEndpoint, CountriesEndpoint>();
+            services.AddScoped<ICitiesEndpoint, CitiesEndpoint>();
+            services.AddScoped<ILatestEndpoint, LatestEndpoint>();
+    }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace AirQualityApi.Models
 {
-    public class Root<T> where T : IAirQualityBase
+    public class Result
     {
-        public Meta Meta { get; set; }
-        public List<T> Results { get; set; }
-    }
+        public bool Success { get; set; }
+        public string Response { get; set; }    
+    }   
 }

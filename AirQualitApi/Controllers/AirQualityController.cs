@@ -1,7 +1,9 @@
 ﻿using AirQualitApi.ViewModels;
+using AirQualityApi.Endpoints;
 using AirQualityApi.Helpers;
 using AirQualityApi.Interfaces;
 using AirQualityApi.Models;
+using AirQualityApi.ServiceClient;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,22 +19,26 @@ namespace AirQualityApi.Controllers
 {
     public class AirQualityController : Controller
     {
-        private readonly IAirQualityClient _airQualityServiceClient;
         private readonly IMapper _mapper;
+        private readonly ICountriesEndpoint _countriesEndpoint;
+        private readonly ICitiesEndpoint _citiesEndpoint;
+        private readonly ILatestEndpoint _latestEndpoint;
 
-        public AirQualityController(IAirQualityClient airQualityClient, IMapper mapper)
+        public AirQualityController( IMapper mapper, ICountriesEndpoint countriesEndpoint, ICitiesEndpoint citiesEndpoint, ILatestEndpoint latestEndpoint )
         {
-            _airQualityServiceClient = airQualityClient;
-            _mapper = mapper;
+           _latestEndpoint = latestEndpoint;
+           _citiesEndpoint = citiesEndpoint;
+           _countriesEndpoint = countriesEndpoint;
+           _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
-        {
+        {      
             var viewModel = new AirQualityIndexViewModel();
 
-            var allCountries = await GetAllCountries();
+            var allCountries = await _countriesEndpoint.GetAllCountries();
 
-            if (allCountries != null && allCountries.Any())
+            if (allCountries.Any())
             {
                 viewModel.AllCountries = allCountries.Select(result =>
 
@@ -51,8 +57,8 @@ namespace AirQualityApi.Controllers
         public async Task<IActionResult> GetAllCities(string selectedCountries)
         {
             var countrieslist = selectedCountries.Split(',').ToList();
-            
-            var allCities = await GetAllCities(countrieslist);
+
+            var allCities = await _citiesEndpoint.GetAllCities(countrieslist);
  
             var result = allCities.Select(city => city.City);
 
@@ -64,22 +70,21 @@ namespace AirQualityApi.Controllers
         {
             var airQualitySearchRequest = _mapper.Map<AirQualitySearchRequest>(viewModel);
 
-            var query = AirQualityHelper.GenerateSearchRequest(airQualitySearchRequest);
+            var latestMeasurements = await _latestEndpoint.GetLatest(airQualitySearchRequest);
 
-            var results = await _airQualityServiceClient.GetMeasurements(query);
+            var measurementsFiltered = latestMeasurements.Where(a => a.city != null && a.city != "N/A").ToList();
 
-            var resultsFiltered = results.Results.Where(a => a.city != null && a.city != "N/A").ToList();
+            viewModel.Measurements = measurementsFiltered;
 
-            viewModel.Measurements = resultsFiltered;
-
-            var result = await GetAllCountries();
+            var result = await _countriesEndpoint.GetAllCountries();
             viewModel.AllCountries = result.Select(country => new SelectListItem
             {
                 Text = country.Name,
                 Value = country.Code
             }).ToList();
 
-            var resultCities = await GetAllCities(viewModel.SelectedCountries);
+
+            var resultCities = await _citiesEndpoint.GetAllCities(viewModel.SelectedCountries);
             viewModel.AllCities = resultCities.Select(city =>
             {
 
@@ -92,22 +97,6 @@ namespace AirQualityApi.Controllers
             
             return View("Index",viewModel);
         }
-
-        private async Task<List<Countries>> GetAllCountries()
-        {
-            var allCountries = await _airQualityServiceClient.GetAllCountries();
-
-            return allCountries.Results;
-        }
-
-        private async Task<List<Cities>> GetAllCities(List<string> countryNames = null)
-        {
-            var query = AirQualityHelper.GenerateSearchRequest(new AirQualitySearchRequest { Country = countryNames });
-
-            var allCities = await _airQualityServiceClient.GetAllCities(query);
-
-            return allCities.Results.Where(c => c.City != "N/A").ToList();
-        }
-
+      
     }
 }

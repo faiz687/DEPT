@@ -3,13 +3,8 @@ using System.Threading.Tasks;
 
 namespace AirQualityApi.Interfaces
 {
-    public interface IAirQualityClient
+    public interface IClient
     {
-        Task<Root<Countries>> GetAllCountries();
-
-        Task<Root<Cities>> GetAllCities(string Query);
-
-        Task<Root<MeasurementResult>> GetMeasurements(string Query);
-
+        Task<Result> Get(string Query);
     }
 }

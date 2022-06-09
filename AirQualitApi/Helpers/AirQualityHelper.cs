@@ -13,12 +13,7 @@ namespace AirQualityApi.Helpers
         {
             var query = "";
 
-            if (searchRequest.City.Any() || searchRequest.Country.Any())
-            {
-                query += "?";
-            }
-            
-            if (searchRequest.City.Any())
+            if (searchRequest.City != null && searchRequest.City.Any())
             {
                 foreach (var city in searchRequest.City)
                 {
@@ -26,8 +21,8 @@ namespace AirQualityApi.Helpers
                 }
             }
 
-            if (searchRequest.Country.Any())
-            {
+            if (searchRequest.Country != null && searchRequest.Country.Any())
+            {       
                 foreach (var country in searchRequest.Country)
                 {
                     query += $"{(nameof(searchRequest.Country)).ToLower()}={country}&";
